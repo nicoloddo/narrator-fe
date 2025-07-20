@@ -47,8 +47,7 @@ http://localhost:3000/index.html  (for development)
 
 **OAuth 2.0 Scopes:**
 - `openid`
-- `email` 
-- `profile`
+- `email`
 - `phone`
 
 ### 2. Install Dependencies
