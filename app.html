@@ -222,7 +222,6 @@
                         class="form-input form-textarea" 
                         id="messageInput" 
                         placeholder="Inserisci il tuo messaggio qui..."
-                        required
                     ></textarea>
                 </div>
                 
@@ -283,7 +282,7 @@
             const responseDiv = document.getElementById('response');
             
             const messageContent = messageInput.value.trim();
-            message = JSON.stringify({
+            const message = JSON.stringify({
                 "mode": "ask_davide",
                 "content": messageContent
             });
