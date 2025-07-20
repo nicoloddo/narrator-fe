@@ -3,7 +3,7 @@ import { UserManager } from "https://cdn.skypack.dev/oidc-client-ts@3.0.1";
 const cognitoAuthConfig = {
     authority: "https://cognito-idp.eu-west-3.amazonaws.com/eu-west-3_TwLpWJISp",
     client_id: "7e8gg5immk9kupv2sriu8ko6pp",
-    redirect_uri: "https://d84l1y8p4kdic.cloudfront.net",
+    redirect_uri: "https://nicoloddo.github.io/narrator-fe/callback.html",
     response_type: "code",
     scope: "email openid phone profile"
 };

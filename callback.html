@@ -110,7 +110,7 @@
                 
                 if (user) {
                     // Successfully authenticated, redirect to app
-                    window.location.href = '/app.html';
+                    window.location.href = '/narrator-fe/app.html';
                 } else {
                     throw new Error('No user returned from callback');
                 }
@@ -126,7 +126,7 @@
 
         // Handle retry button
         document.getElementById('retry').addEventListener('click', () => {
-            window.location.href = '/index.html';
+            window.location.href = '/narrator-fe/index.html';
         });
 
         // Process the callback automatically
