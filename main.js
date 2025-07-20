@@ -5,7 +5,7 @@ const cognitoAuthConfig = {
     client_id: "7e8gg5immk9kupv2sriu8ko6pp",
     redirect_uri: "https://d84l1y8p4kdic.cloudfront.net",
     response_type: "code",
-    scope: "email"
+    scope: "email openid phone profile"
 };
 
 // Create a UserManager instance
