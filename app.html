@@ -282,13 +282,17 @@
             const sendBtn = document.getElementById('sendBtn');
             const responseDiv = document.getElementById('response');
             
-            const message = messageInput.value.trim();
-            if (!message) {
+            const messageContent = messageInput.value.trim();
+            if (!messageContent) {
                 responseDiv.className = 'response error';
                 responseDiv.textContent = 'Per favore inserisci un messaggio.';
                 responseDiv.style.display = 'block';
                 return;
             }
+            message = JSON.stringify({
+                "mode": "ask_davide",
+                "content": messageContent
+            });
 
             try {
                 await sendMessage(
