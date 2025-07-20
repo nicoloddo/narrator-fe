@@ -5,7 +5,7 @@ const cognitoAuthConfig = {
     client_id: "7e8gg5immk9kupv2sriu8ko6pp",
     redirect_uri: "https://nicoloddo.github.io/narrator-fe/callback.html",
     response_type: "code",
-    scope: "email openid phone profile"
+    scope: "email"
 };
 
 // Create a UserManager instance
