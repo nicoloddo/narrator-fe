@@ -283,12 +283,6 @@
             const responseDiv = document.getElementById('response');
             
             const messageContent = messageInput.value.trim();
-            if (!messageContent) {
-                responseDiv.className = 'response error';
-                responseDiv.textContent = 'Per favore inserisci un messaggio.';
-                responseDiv.style.display = 'block';
-                return;
-            }
             message = JSON.stringify({
                 "mode": "ask_davide",
                 "content": messageContent
