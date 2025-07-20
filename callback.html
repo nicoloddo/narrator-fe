@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PineappleNarrator - Autenticazione in corso...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .callback-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            color: #e74c3c;
+            padding: 1rem;
+            background: #fee;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <div id="loading" class="loading-section">
+            <div class="loading-spinner"></div>
+            <div class="message">Autenticazione in corso...</div>
+            <div class="subtitle">Attendere prego, verifica delle credenziali.</div>
+        </div>
+        
+        <div id="error" class="error"></div>
+        <button id="retry" class="retry-btn">Riprova</button>
+    </div>
+
+    <script type="module">
+        import { handleSigninCallback } from './main.js';
+
+        async function processCallback() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const retryBtn = document.getElementById('retry');
+
+            try {
+                const user = await handleSigninCallback();
+                
+                if (user) {
+                    // Successfully authenticated, redirect to app
+                    window.location.href = '/app.html';
+                } else {
+                    throw new Error('No user returned from callback');
+                }
+            } catch (err) {
+                console.error('Callback error:', err);
+                
+                loading.style.display = 'none';
+                error.textContent = 'Errore durante l\'autenticazione. Per favore, riprova.';
+                error.style.display = 'block';
+                retryBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Handle retry button
+        document.getElementById('retry').addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+
+        // Process the callback automatically
+        processCallback();
+    </script>
+</body>
+</html> 

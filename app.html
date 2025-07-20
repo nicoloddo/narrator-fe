@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narrator - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .response.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .response.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="authLoading">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div>Verificando autenticazione...</div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">PineappleNarrator</div>
+            <div class="user-info">
+                <span class="user-email" id="userEmail">Caricamento...</span>
+                <button class="logout-btn" id="logoutBtn">Esci</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card">
+            <div class="card-title">Invia Messaggio</div>
+            
+            <form id="messageForm">
+                <div class="form-group">
+                    <label class="form-label" for="messageInput">Messaggio</label>
+                    <textarea 
+                        class="form-input form-textarea" 
+                        id="messageInput" 
+                        placeholder="Inserisci il tuo messaggio qui..."
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="sendBtn">
+                    Invia Messaggio
+                </button>
+            </form>
+            
+            <div id="response" class="response"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getUser, isAuthenticated, signOut } from './main.js';
+        import { sendMessage } from './sender.js';
+
+        // Check authentication on page load
+        async function checkAuth() {
+            const authLoading = document.getElementById('authLoading');
+            authLoading.style.display = 'flex';
+
+            try {
+                if (!(await isAuthenticated())) {
+                    window.location.href = '/index.html';
+                    return;
+                }
+
+                const user = await getUser();
+                if (user && user.profile) {
+                    document.getElementById('userEmail').textContent = 
+                        user.profile.email || user.profile.preferred_username || 'Utente';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = '/index.html';
+            } finally {
+                authLoading.style.display = 'none';
+            }
+        }
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut();
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Fallback: redirect to index
+                window.location.href = '/index.html';
+            }
+        });
+
+        // Handle message form
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const responseDiv = document.getElementById('response');
+            
+            const message = messageInput.value.trim();
+            if (!message) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Per favore inserisci un messaggio.';
+                responseDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                await sendMessage(
+                    message,
+                    sendBtn,
+                    responseDiv,
+                    'Messaggio inviato con successo!'
+                );
+                
+                // Clear form on success
+                messageInput.value = '';
+                responseDiv.className = 'response success';
+                
+            } catch (error) {
+                console.error('Send message error:', error);
+                responseDiv.className = 'response error';
+                
+                if (error.message.includes('not authenticated')) {
+                    responseDiv.textContent = 'Sessione scaduta. Ricarica la pagina per effettuare di nuovo il login.';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                }
+            }
+        });
+
+        // Initialize app
+        checkAuth();
+    </script>
+</body>
+</html> 
