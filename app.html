@@ -213,6 +213,19 @@
 
     <main class="main-content">
         <div class="card">
+            <div class="card-title">Monitor di Sicurezza</div>
+            <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">
+                Attiva il monitoraggio di sicurezza per ricevere notifiche sui problemi di sicurezza rilevati.
+            </p>
+            
+            <button type="button" class="btn-primary" id="securityMonitorBtn">
+                Attiva Monitor di Sicurezza
+            </button>
+            
+            <div id="securityResponse" class="response"></div>
+        </div>
+
+        <div class="card">
             <div class="card-title">Invia Messaggio</div>
             
             <form id="messageForm">
@@ -305,6 +318,38 @@
                 
                 if (error.message.includes('not authenticated')) {
                     responseDiv.textContent = 'Sessione scaduta. Ricarica la pagina per effettuare di nuovo il login.';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                }
+            }
+        });
+
+        // Handle security monitor activation
+        document.getElementById('securityMonitorBtn').addEventListener('click', async () => {
+            const securityBtn = document.getElementById('securityMonitorBtn');
+            const securityResponseDiv = document.getElementById('securityResponse');
+            
+            const message = JSON.stringify({
+                "mode": "security_monitor"
+            });
+
+            try {
+                await sendMessage(
+                    message,
+                    securityBtn,
+                    securityResponseDiv,
+                    'Monitor di sicurezza attivato con successo!'
+                );
+                
+                securityResponseDiv.className = 'response success';
+                
+            } catch (error) {
+                console.error('Security monitor error:', error);
+                securityResponseDiv.className = 'response error';
+                
+                if (error.message.includes('not authenticated')) {
+                    securityResponseDiv.textContent = 'Sessione scaduta. Ricarica la pagina per effettuare di nuovo il login.';
                     setTimeout(() => {
                         window.location.reload();
                     }, 3000);
